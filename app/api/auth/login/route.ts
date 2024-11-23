@@ -5,10 +5,10 @@ import bcryptjs from "bcryptjs";
 import User from '../../../../models/userModel'
 import jwt from 'jsonwebtoken'
 dotenv.config();    
-connectDb();
 
 export async function POST(request:NextRequest){
     try {
+        await connectDb();
         const reqBody = await request.json();
         const { email, password} = reqBody;
             console.log(reqBody);
@@ -31,7 +31,7 @@ export async function POST(request:NextRequest){
         }
 
         //check if passowrd is correct or not
-        const isMatch = await bcryptjs.compare(password,user.password);
+        const isMatch = await bcryptjs.compare(password,user.hashedPassword);
 
 
         if (!isMatch) {

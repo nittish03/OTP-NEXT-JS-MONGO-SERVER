@@ -6,6 +6,7 @@ import { redirect, useRouter } from 'next/navigation'
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from 'next-auth/react'
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 
 const LoginPage = () => {
@@ -36,12 +37,21 @@ const LoginPage = () => {
       }
       console.log("email" + email);
       console.log("password" + email);
+      
       try {
+          const loading = toast.loading("Signing in")
         const response = await axios.post("/api/auth/login",{email,password});
         if(response){
             router.push('/')
+            toast.dismiss(loading)
+            toast.success("Signed in successfully");
+        }else{
+            toast.dismiss(loading)
+            toast.error("Failed to sign in");
+
         }
       } catch (error) {
+        toast.error("Failed to sign in");
           console.log(error);
       }
       return;
